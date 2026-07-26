@@ -1,14 +1,15 @@
 import styles from './Header.module.css';
+import { Link } from 'react-router-dom';
 
 export const Header = () => {
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
         <div className={styles.siteId}>
-          <a href="/">Blog</a>
+          <Link to="/">Blog</Link>
         </div>
         <div className={styles.contact}>
-          <a href="/contact/">お問い合わせ</a>
+          <Link to="/contact/">お問い合わせ</Link>
         </div>
       </div>
     </header>
