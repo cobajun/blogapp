@@ -9,10 +9,15 @@ export const ArticleDetail = () => {
   const post = posts.find(p => p.id === Number(id));
 
   useEffect(() => {
+    if (!post) return;
     document.title = `${post.title} | Blog`;
     document.querySelector('meta[name="description"]')
       ?.setAttribute('content', '記事詳細ページです。');
-  }, []);
+  }, [post]);
+
+  if (!post) {
+    return <p>記事が見つかりませんでした。</p>
+  }
 
   return (
     <>
@@ -23,9 +28,7 @@ export const ArticleDetail = () => {
         <ArticleMeta createdAt={post.createdAt} categories={post.categories} />
         <div className={styles.body}>
           <h1 className={styles.title}>{post.title}</h1>
-          <div className={styles.content}>
-            <p dangerouslySetInnerHTML={{ __html: post.content }} />
-          </div>
+          <div className={styles.content} dangerouslySetInnerHTML={{ __html: post.content }} />
         </div>
         <div className={styles.back}>
           <Link to="/" className={styles.btn}>
