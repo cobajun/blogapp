@@ -1,12 +1,22 @@
 import styles from './ArticleDetail.module.css';
 import { ArticleMeta } from '../ArticleMeta';
 import { useParams , Link } from 'react-router-dom'; 
-import { posts } from '../../data/posts';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export const ArticleDetail = () => {
   const { id } = useParams();
-  const post = posts.find(p => p.id === Number(id));
+  const [isLoading, setIsLoading] = useState(true); 
+
+  const [post, setPost] = useState(null);
+  useEffect(() => {
+      const getData = async () => {
+      const res = await fetch(`https://1hmfpsvto6.execute-api.ap-northeast-1.amazonaws.com/dev/posts/${id}`);
+      const data = await res.json();
+      setPost(data.post);
+      setIsLoading(false);
+    };
+    getData();
+  }, [id]);
 
   useEffect(() => {
     if (!post) return;
@@ -15,8 +25,21 @@ export const ArticleDetail = () => {
       ?.setAttribute('content', '記事詳細ページです。');
   }, [post]);
 
+  if (isLoading) {
+    return <p>読み込み中...</p>
+  }
+
   if (!post) {
-    return <p>記事が見つかりませんでした。</p>
+    return (
+      <>
+        <p>記事が見つかりませんでした。</p>
+        <div className={styles.back}>
+          <Link to="/" className={styles.btn}>
+            記事一覧へ戻る
+          </Link>
+        </div>
+      </>
+    );
   }
 
   return (

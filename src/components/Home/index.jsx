@@ -1,17 +1,34 @@
 import { ArticleList } from '../ArticleList'; 
-import { posts } from '../../data/posts';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export const Home = () => {
-  const sorted = [...posts].sort(
-    (m, n) => new Date(n.createdAt) - new Date(m.createdAt)
-  );
+  const [posts, setPosts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  useEffect(() => {
+     const getData = async () => {
+      const res = await fetch("https://1hmfpsvto6.execute-api.ap-northeast-1.amazonaws.com/dev/posts");
+      const data = await res.json();
+      setPosts(data.posts);
+      setIsLoading(false);
+    };
+    getData();
+  }, []);
+
   useEffect(() => {
     document.title = 'Blog';
     document.querySelector('meta[name="description"]')
     ?.setAttribute('content', 'Blog Reactの練習用サイトです。');
   }, []);
 
+  if (isLoading) {
+    return <p>読み込み中...</p>
+  }
+  
+  const sorted = [...posts].sort(
+    (m, n) => new Date(n.createdAt) - new Date(m.createdAt)
+  );
+  
   return (
     <>
       
