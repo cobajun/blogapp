@@ -24,6 +24,10 @@ export const Home = () => {
   if (isLoading) {
     return <p>読み込み中...</p>
   }
+
+   if (posts.length === 0) {
+    return <p>記事が見つかりませんでした。</p>
+   }
   
   const sorted = [...posts].sort(
     (m, n) => new Date(n.createdAt) - new Date(m.createdAt)
